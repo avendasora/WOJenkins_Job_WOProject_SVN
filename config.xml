@@ -1,0 +1,171 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>&lt;p&gt;This project will build WebObjects projects (both Frameworks and Applications) that are based on Project Wonder. &#xd;
+You can specify the version of Apple WebObjects™ to use, the repository and branch for your project and the repository and branch&#xd;
+  for Project Wonder.&lt;/p&gt; &#xd;
+  &#xd;
+&lt;p&gt;You can also specify you want a &lt;b&gt;Test Build&lt;/b&gt; (no embedded frameworks) or a &lt;b&gt;Deployment Build&lt;/b&gt; (fully &#xd;
+  embedded WebObjects and Project Wonder Frameworks)&#xd;
+&#xd;
+&lt;p&gt;You can use this project as a template for your own projects, or simply specify the parameters at runtime.&#xd;
+  &#xd;
+  &lt;p&gt;&lt;b&gt;NOTE:&lt;/b&gt; this project is meant to work in tandem with the &#xd;
+    &lt;a href=&quot;https://github.com/avendasora/WOJenkins_Job_InstallWOAndWOnder&quot;&gt;InstallWOAndWOnder&lt;/a&gt; Jenkins job. &#xd;
+    That job will take care of downloading and installing WebObjects™ and cloning, building and installing Project WOnder&#xd;
+    so that they are available for this job to use.</description>
+  <logRotator>
+    <daysToKeep>-1</daysToKeep>
+    <numToKeep>3</numToKeep>
+    <artifactDaysToKeep>-1</artifactDaysToKeep>
+    <artifactNumToKeep>-1</artifactNumToKeep>
+  </logRotator>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>PROJECT_NAME</name>
+          <description>What is the name of the WOFramework or WOApplication project in the repository that you want to build?</description>
+          <defaultValue>ACJars</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>PROJECT_SVN_REPOSITORY</name>
+          <description>The SVN repository that holds the project you want to build.</description>
+          <defaultValue>svn://davea@wo105.mcf.com/opt/repos/svn/air</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.ChoiceParameterDefinition>
+          <name>PROJECT_BRANCHES_TAGS_TRUNK</name>
+          <description>Select either &quot;branches/&quot;, &quot;tags/&quot; or &quot;trunk&quot;. If you select branches, then you must also specify a branch. If you select &quot;Trunk&quot; then the branch parameter MUST BE BLANK.</description>
+          <choices class="java.util.Arrays$ArrayList">
+            <a class="string-array">
+              <string>trunk</string>
+              <string>branches/</string>
+              <string>tags/</string>
+            </a>
+          </choices>
+        </hudson.model.ChoiceParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>PROJECT_BRANCH_TAG</name>
+          <description></description>
+          <defaultValue></defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.ChoiceParameterDefinition>
+          <name>BUILD_TYPE</name>
+          <description>Test Build will only link to frameworks (fast). Deployment will obey the Deployment settings defined in WOLips.</description>
+          <choices class="java.util.Arrays$ArrayList">
+            <a class="string-array">
+              <string>Test Build</string>
+              <string>Deployment</string>
+            </a>
+          </choices>
+        </hudson.model.ChoiceParameterDefinition>
+        <hudson.model.ChoiceParameterDefinition>
+          <name>WO_VERSION</name>
+          <description></description>
+          <choices class="java.util.Arrays$ArrayList">
+            <a class="string-array">
+              <string>5.4.3</string>
+              <string>5.3.3</string>
+            </a>
+          </choices>
+        </hudson.model.ChoiceParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>WONDER_GIT_REFERENCE</name>
+          <description>The Git branch or tag of Wonder that you want to build against. In Git terms it will be &quot;refs/WONDER_GIT_REFERENCE_TYPE/WONDER_GIT_REFERENCE&quot;. &lt;b&gt;master&lt;/b&gt; is the default, but valid options could be &lt;b&gt;*&lt;/b&gt; or &lt;b&gt;MyBranch&lt;/b&gt;</description>
+          <defaultValue>master</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.ChoiceParameterDefinition>
+          <name>JAVA_COMPATIBILITY_VERSION</name>
+          <description></description>
+          <choices class="java.util.Arrays$ArrayList">
+            <a class="string-array">
+              <string>1.5</string>
+              <string>1.6</string>
+              <string>1.7</string>
+              <string>1.4</string>
+            </a>
+          </choices>
+        </hudson.model.ChoiceParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <scm class="org.jenkinsci.plugins.multiplescms.MultiSCM">
+    <scms>
+      <hudson.plugins.git.GitSCM>
+        <configVersion>2</configVersion>
+        <userRemoteConfigs>
+          <hudson.plugins.git.UserRemoteConfig>
+            <name>origin</name>
+            <refspec>+refs/heads/*:refs/remotes/origin/*</refspec>
+            <url>https://github.com/amagavi/WOJenkins.git</url>
+          </hudson.plugins.git.UserRemoteConfig>
+        </userRemoteConfigs>
+        <branches>
+          <hudson.plugins.git.BranchSpec>
+            <name>master</name>
+          </hudson.plugins.git.BranchSpec>
+        </branches>
+        <disableSubmodules>false</disableSubmodules>
+        <recursiveSubmodules>false</recursiveSubmodules>
+        <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+        <authorOrCommitter>false</authorOrCommitter>
+        <clean>false</clean>
+        <wipeOutWorkspace>false</wipeOutWorkspace>
+        <pruneBranches>false</pruneBranches>
+        <remotePoll>false</remotePoll>
+        <buildChooser class="hudson.plugins.git.util.DefaultBuildChooser"/>
+        <gitTool>Default</gitTool>
+        <submoduleCfg class="list"/>
+        <relativeTargetDir>WOJenkins</relativeTargetDir>
+        <reference></reference>
+        <excludedRegions></excludedRegions>
+        <excludedUsers></excludedUsers>
+        <gitConfigName></gitConfigName>
+        <gitConfigEmail></gitConfigEmail>
+        <skipTag>false</skipTag>
+        <scmName>WOJenkins</scmName>
+      </hudson.plugins.git.GitSCM>
+      <hudson.scm.SubversionSCM>
+        <locations>
+          <hudson.scm.SubversionSCM_-ModuleLocation>
+            <remote>${PROJECT_SVN_REPOSITORY}/${PROJECT_BRANCHES_TAGS_TRUNK}${PROJECT_BRANCH_TAG}/${PROJECT_NAME}</remote>
+            <local>Projects/${PROJECT_NAME}</local>
+          </hudson.scm.SubversionSCM_-ModuleLocation>
+        </locations>
+        <excludedRegions></excludedRegions>
+        <includedRegions></includedRegions>
+        <excludedUsers></excludedUsers>
+        <excludedRevprop></excludedRevprop>
+        <excludedCommitMessages></excludedCommitMessages>
+        <workspaceUpdater class="hudson.scm.subversion.UpdateWithCleanUpdater"/>
+      </hudson.scm.SubversionSCM>
+    </scms>
+  </scm>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>true</blockBuildWhenUpstreamBuilding>
+  <triggers class="vector"/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>${WORKSPACE}/WOJenkins/Build/WonderProjects/WorkspaceSetupScripts/SVNProject/GitWonder/setupWonderProjectWorkspace.sh</command>
+    </hudson.tasks.Shell>
+    <hudson.tasks.Ant>
+      <targets>build
+-verbose
+-propertyfile ${WORKSPACE}/Root/build.properties
+-lib ${WORKSPACE}/Root/lib/woproject.jar</targets>
+      <buildFile>Projects/${PROJECT_NAME}/build.xml</buildFile>
+      <properties>Projects/${PROJECT_NAME}/</properties>
+    </hudson.tasks.Ant>
+  </builders>
+  <publishers>
+    <hudson.tasks.ArtifactArchiver>
+      <artifacts>**/dist/*.tar.gz</artifacts>
+      <latestOnly>false</latestOnly>
+    </hudson.tasks.ArtifactArchiver>
+  </publishers>
+  <buildWrappers/>
+</project>
