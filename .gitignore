@@ -4,3 +4,5 @@ lastSuccessful
 nextBuildNumber
 workspace
 scm-polling.log
+subversion.credentials
+svnexternals.txt
