@@ -27,12 +27,12 @@ You can specify the version of Apple WebObjects™ to use, the repository and br
         <hudson.model.StringParameterDefinition>
           <name>PROJECT_NAME</name>
           <description>What is the name of the WOFramework or WOApplication project in the repository that you want to build?</description>
-          <defaultValue></defaultValue>
+          <defaultValue>AISCore</defaultValue>
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
           <name>PROJECT_SVN_REPOSITORY</name>
           <description>The SVN repository that holds the project you want to build.</description>
-          <defaultValue></defaultValue>
+          <defaultValue>svn://wo105.mcf.com/opt/repos/svn/air</defaultValue>
         </hudson.model.StringParameterDefinition>
         <hudson.model.ChoiceParameterDefinition>
           <name>PROJECT_BRANCHES_TAGS_TRUNK</name>
@@ -98,7 +98,7 @@ You can specify the version of Apple WebObjects™ to use, the repository and br
           <hudson.plugins.git.UserRemoteConfig>
             <name>origin</name>
             <refspec>+refs/heads/*:refs/remotes/origin/*</refspec>
-            <url>https://github.com/avendasora/WOJenkins.git</url>
+            <url>https://github.com/amagavi/WOJenkins.git</url>
           </hudson.plugins.git.UserRemoteConfig>
         </userRemoteConfigs>
         <branches>
@@ -165,7 +165,7 @@ You can specify the version of Apple WebObjects™ to use, the repository and br
       <latestOnly>false</latestOnly>
     </hudson.tasks.ArtifactArchiver>
     <hudson.tasks.BuildTrigger>
-      <childProjects>AISCore</childProjects>
+      <childProjects>AIS, AIR</childProjects>
       <threshold>
         <name>SUCCESS</name>
         <ordinal>0</ordinal>
