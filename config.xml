@@ -30,6 +30,11 @@ You can specify the version of Apple WebObjects™ to use, the repository and br
           <defaultValue>AISCore</defaultValue>
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
+          <name>DEPLOYED_APPLICATION_NAME</name>
+          <description>&lt;b&gt;**OPTIONAL**&lt;/b&gt; this setting allows you to specify a different name for an Application when it is built. Technically, it overrides the value in the project&apos;s build.properties file. If you leave it blank, it will simply use the PROJECT_NAME value, which should match the name in the build.properties file.</description>
+          <defaultValue></defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
           <name>PROJECT_SVN_REPOSITORY</name>
           <description>The SVN repository that holds the project you want to build.</description>
           <defaultValue>svn://wo105.mcf.com/opt/repos/svn/air</defaultValue>
@@ -98,7 +103,7 @@ You can specify the version of Apple WebObjects™ to use, the repository and br
           <hudson.plugins.git.UserRemoteConfig>
             <name>origin</name>
             <refspec>+refs/heads/*:refs/remotes/origin/*</refspec>
-            <url>https://github.com/amagavi/WOJenkins.git</url>
+            <url>https://github.com/avendasora/WOJenkins.git</url>
           </hudson.plugins.git.UserRemoteConfig>
         </userRemoteConfigs>
         <branches>
