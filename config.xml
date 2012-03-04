@@ -26,18 +26,18 @@ You can specify the version of Apple WebObjects™ to use, the repository and br
       <parameterDefinitions>
         <hudson.model.StringParameterDefinition>
           <name>PROJECT_NAME</name>
-          <description>What is the name of the WOFramework or WOApplication project in the repository that you want to build?</description>
-          <defaultValue>AISCore</defaultValue>
+          <description>This is the name of the directory that contains the WebObjects application project that you want to build, i.e., the directory that contains the Sources, Components and Resources subdirectories). To specify frameworks that this application depends upon and should be built as part of this job then you will need to add additional Ant Tasks. Depending on your source code repository structure you may also need to add additional SCM to check them out into the &quot;Projects&quot; directory as well.</description>
+          <defaultValue>YourProjectName</defaultValue>
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
           <name>DEPLOYED_APPLICATION_NAME</name>
-          <description>&lt;b&gt;**OPTIONAL**&lt;/b&gt; this setting allows you to specify a different name for an Application when it is built. Technically, it overrides the value in the project&apos;s build.properties file. If you leave it blank, it will simply use the PROJECT_NAME value, which should match the name in the build.properties file.</description>
-          <defaultValue></defaultValue>
+          <description>This setting allows you to specify a different name for an Application when it is built. You &lt;b&gt;must&lt;/b&gt; specify a value, even if it is the same as the PROJECT_NAME parameter above.</description>
+          <defaultValue>YourProjectName</defaultValue>
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
           <name>PROJECT_SVN_REPOSITORY</name>
           <description>The SVN repository that holds the project you want to build.</description>
-          <defaultValue>svn://wo105.mcf.com/opt/repos/svn/air</defaultValue>
+          <defaultValue>svn://snv.your.com/repository/</defaultValue>
         </hudson.model.StringParameterDefinition>
         <hudson.model.ChoiceParameterDefinition>
           <name>PROJECT_BRANCHES_TAGS_TRUNK</name>
@@ -57,7 +57,10 @@ You can specify the version of Apple WebObjects™ to use, the repository and br
         </hudson.model.StringParameterDefinition>
         <hudson.model.ChoiceParameterDefinition>
           <name>BUILD_TYPE</name>
-          <description>Test Build will only link to frameworks (fast). Deployment will obey the Deployment settings defined in WOLips.</description>
+          <description>&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Test Build&lt;/b&gt; will override the settings defined in WOLips and will not embed any frameworks in the built application, it will only link to them.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Deployment&lt;/b&gt; will obey the Deployment settings you defined for the project in WOLips, which should almost certainly be to embed both System and Local frameworks.&lt;/li&gt;
+&lt;/ul&gt;</description>
           <choices class="java.util.Arrays$ArrayList">
             <a class="string-array">
               <string>Test Build</string>
@@ -67,7 +70,7 @@ You can specify the version of Apple WebObjects™ to use, the repository and br
         </hudson.model.ChoiceParameterDefinition>
         <hudson.model.ChoiceParameterDefinition>
           <name>WO_VERSION</name>
-          <description></description>
+          <description>This is the version of Apple™ WebObjects that you want to build against. It must have been already downloaded and installed in Jenkin&apos;s WOFrameworksRepository (JENKINS_HOME/WOFrameworkRepository). The easiest way to do this is by cloning and running the &lt;a href=&quot;https://github.com/avendasora/WOJenkins_Job_InstallWOAndWOnder&quot;&gt;InstallWOAndWOnder&lt;/a&gt; Jenkins job.</description>
           <choices class="java.util.Arrays$ArrayList">
             <a class="string-array">
               <string>5.4.3</string>
@@ -77,7 +80,7 @@ You can specify the version of Apple WebObjects™ to use, the repository and br
         </hudson.model.ChoiceParameterDefinition>
         <hudson.model.StringParameterDefinition>
           <name>WONDER_GIT_REFERENCE</name>
-          <description>The Git branch or tag of Wonder that you want to build against. In Git terms it will be &quot;refs/WONDER_GIT_REFERENCE_TYPE/WONDER_GIT_REFERENCE&quot;. &lt;b&gt;master&lt;/b&gt; is the default, but valid options could be &lt;b&gt;*&lt;/b&gt; or &lt;b&gt;MyBranch&lt;/b&gt;</description>
+          <description>This is the branch of Wonder that you want to build against. This branch of Project WOnder must have been already built and installed in Jenkin&apos;s WOFrameworksRepository. The easiest way to do this is by cloning and running the &lt;a href=&quot;https://github.com/avendasora/WOJenkins_Job_InstallWOAndWOnder&quot;&gt;InstallWOAndWOnder&lt;/a&gt; Jenkins job.</description>
           <defaultValue>master</defaultValue>
         </hudson.model.StringParameterDefinition>
         <hudson.model.ChoiceParameterDefinition>
@@ -159,7 +162,7 @@ You can specify the version of Apple WebObjects™ to use, the repository and br
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command>${WORKSPACE}/WOJenkins/Build/WonderProjects/WorkspaceSetupScripts/SVNProject/GitWonder/setupWonderProjectWorkspace.sh</command>
+      <command>${WORKSPACE}/WOJenkins/Build/WonderProjects/WorkspaceSetupScripts/setupWonderProjectWorkspace.sh</command>
     </hudson.tasks.Shell>
     <hudson.tasks.Ant>
       <targets>build
@@ -167,7 +170,8 @@ You can specify the version of Apple WebObjects™ to use, the repository and br
 -propertyfile ${WORKSPACE}/Root/build.properties
 -lib ${WORKSPACE}/Root/lib/woproject.jar</targets>
       <buildFile>Projects/${PROJECT_NAME}/build.xml</buildFile>
-      <properties>Projects/${PROJECT_NAME}/</properties>
+      <properties>Projects/${PROJECT_NAME}/
+project.name=${DEPLOYED_APPLICATION_NAME}</properties>
     </hudson.tasks.Ant>
   </builders>
   <publishers>
@@ -175,14 +179,6 @@ You can specify the version of Apple WebObjects™ to use, the repository and br
       <artifacts>**/dist/*.tar.gz</artifacts>
       <latestOnly>false</latestOnly>
     </hudson.tasks.ArtifactArchiver>
-    <hudson.tasks.BuildTrigger>
-      <childProjects>AIS, AIR</childProjects>
-      <threshold>
-        <name>SUCCESS</name>
-        <ordinal>0</ordinal>
-        <color>BLUE</color>
-      </threshold>
-    </hudson.tasks.BuildTrigger>
   </publishers>
   <buildWrappers/>
 </project>
